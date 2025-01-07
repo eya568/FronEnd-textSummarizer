@@ -16,20 +16,19 @@ const SummarizeApp = () => {
       setSummary('Please enter some text to summarize.');
       return;
     }
-
+  
     setLoading(true);
     setError('');
     try {
-      const summarizedText = await summarizeText(inputText); 
-      
-      setSummary(summarizedText);
+      const summarizedText = await summarizeText(inputText);
+      setSummary(summarizedText);  // Set the summary state with the response
     } catch (err) {
       setError(err.message || 'Failed to summarize text.');
     } finally {
       setLoading(false);
     }
   };
-
+  
   return (
     <div
       className="relative flex size-full min-h-screen flex-col bg-slate-50 group/design-root overflow-x-hidden"
@@ -50,7 +49,7 @@ const SummarizeApp = () => {
                 >
                   <div className="flex flex-col gap-2 text-center">
                     <h1 className="text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-5xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em]">
-                      Summarize your text
+                       Summarise your text
                     </h1>
                     <h2 className="text-white text-sm font-normal leading-normal @[480px]:text-base @[480px]:font-normal @[480px]:leading-normal">
                       Input your text below and we'll generate a summary for you. You can also upload a document or PDF file.

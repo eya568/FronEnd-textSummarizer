@@ -1,17 +1,22 @@
 import axios from 'axios';
 import { API_BASE_URL } from '../config/apiConfig';
-import { useState } from 'react';
 
 export const summarizeText = async (text) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}`);
-  console.log('response', response.data.content);
-    console.log('Response content:', response.data.content);
-    } catch (error) {
+    // Send the request with the content in the body
+    const response = await axios.post(`${API_BASE_URL}/summarize`, { content: text });
+
+    // Log the content of the response
+    console.log('response', response.data.summary);
+    return response.data.summary; // return the summary text to the component
+
+
+  } catch (error) {
     console.error('Error summarizing text:', error);
     throw new Error('Failed to summarize text.');
   }
 };
+
 export const clearJsonFile = async () => {
   try {
     const response = await axios.post(`${API_BASE_URL}/clear`);

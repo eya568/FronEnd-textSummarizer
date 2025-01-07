@@ -22,7 +22,7 @@ const useAuth = () => {
 
   // Logout function
   const logout = () => {
-    // Clear user data from local storage (or perform API call)
+    
     localStorage.removeItem('user');
     setUser(null);
   };
