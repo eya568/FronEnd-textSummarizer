@@ -62,13 +62,7 @@ const SummaryCard = ({ title, time, image }) => {
         </div>
       </div>
       <div className="shrink-0">
-      <Link
-          to="/summary"
-          state={{ title, time, image }}  // Pass the summary data as state
-          className="text-base font-medium leading-normal"
-        >
-          View
-        </Link>
+        <Link to="/summary" className="text-base font-medium leading-normal">View</Link>
       </div>
     </div>
   );
