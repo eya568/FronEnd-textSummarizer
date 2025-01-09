@@ -15,7 +15,6 @@ export function AuthProvider({ children }) {
     try {
       const response = await loginService(email, password);
       localStorage.setItem('access_token', response.access_token);
-      console.log('Login successful:', email);
       // Navigate to homepage on successful login
       navigate('/homepage');
     } catch (err) {
