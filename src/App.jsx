@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import HomePage from './pages/HomePage';
 import SavedSummaries from './components/savedSummaries'
 import SummaryPage from './components/SummaryPage';
@@ -26,6 +27,10 @@ function App() {
           <Route 
             path="/register" 
             element={isAuthenticated() ? <Navigate to="/homepage" replace /> : <RegisterPage />} 
+          />
+          <Route 
+            path="/reset-password" 
+            element={isAuthenticated() ? <Navigate to="/homepage" replace /> : <ResetPasswordPage />} 
           />
           
           {/* Default route */}

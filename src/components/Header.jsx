@@ -1,11 +1,12 @@
 // Header.js
 import React from 'react';
 import { Link } from 'react-router-dom';
-//import { useAuth } from '../hooks/useAuth';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
- // const { logout } = useAuth();
- //const navigate = useNavigate();
+  const { logout } = useAuth();
+  const navigate = useNavigate();
 
  const handleLogout = () => {
    // Remove the access token from localStorage

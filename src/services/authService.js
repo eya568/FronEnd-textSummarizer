@@ -10,12 +10,41 @@ export const login = async (email, password) => {
     throw new Error(error.response?.data?.detail || 'Login failed. Please try again.');
   }
 };
+
 export const register = async (username, email, password) => {
   try {
-    console.log(username, email, password);
-    const response = await axios.post(`${API_BASE_URL}/register`, { username, email, password });
-    return response.data; // Assuming the response contains status and user_id
+    const response = await axios.post(`${API_BASE_URL}/register`, { 
+      username, 
+      email, 
+      password 
+    });
+    return response.data; // Returns { message: "User registered successfully", user_id: ... }
   } catch (error) {
-    throw new Error(error.response?.data?.detail || 'Registration failed. Please try again.');
+    // Propagate specific error messages from the server
+    if (error.response) {
+      throw new Error(error.response.data.detail || 'Registration failed');
+    }
+    throw new Error('Network error. Please try again.');
+  }
+};
+
+export const requestPasswordReset = async (email) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/auth/request-password-reset`, { email });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || 'Password reset request failed. Please try again.');
+  }
+};
+
+export const confirmPasswordReset = async (token, newPassword) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/auth/reset-password`, { 
+      token, 
+      new_password: newPassword 
+    });
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || 'Password reset failed. Please try again.');
   }
 };
