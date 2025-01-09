@@ -1,7 +1,11 @@
 // Header.js
 import React from 'react';
 import { Link } from 'react-router-dom';
+//import { useAuth } from '../hooks/useAuth';
+
 const Header = () => {
+ // const { logout } = useAuth();
+
   return (
     <header className="flex items-center justify-between border-b border-solid border-b-[#e7eef4] px-10 py-3">
       <div className="flex items-center gap-4 text-[#0d151c]">
@@ -17,7 +21,7 @@ const Header = () => {
         <Link to="/Saved" className="text-[#0d151c] text-sm font-medium leading-normal">Saved</Link>          <a className="text-[#0d151c] text-sm font-medium leading-normal" href="#">Explore</a>
           <a className="text-[#0d151c] text-sm font-medium leading-normal" href="#">Profile</a>
         </div>
-       
+    
         <div className="w-10 h-10 bg-center bg-no-repeat bg-cover rounded-full" style={{ backgroundImage: 'url("https://cdn.usegalileo.ai/sdxl10/ebfdd10d-8c69-4a1a-b628-13f91d443dc0.png")' }}></div>
       </div>
     </header>
