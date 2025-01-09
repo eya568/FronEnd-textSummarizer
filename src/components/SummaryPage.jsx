@@ -1,110 +1,64 @@
-import React, { useState } from 'react';
-import Footer from './Footer';
-import Header from './Header';
-import background from '../assets/background.svg';
-import { summarizeText } from '../services/summarizeService'; // Adjust path if needed
+import React from 'react';
+import { useLocation } from 'react-router-dom';
 
-const SummarizeApp = () => {
-  // State to hold input text, summary, saved summaries, and error/loading states
-  const [inputText, setInputText] = useState('');
-  const [summary, setSummary] = useState('');
-  const [savedSummaries, setSavedSummaries] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
-  const handleSummarize = async () => {
-    if (!inputText) { 
-      setSummary('Please enter some text to summarize.');
-      return;
-    }
-
-    setLoading(true);
-    setError('');
-    try {
-      const summarizedText = await summarizeText(inputText);
-      setSummary(summarizedText);  // Set the summary state with the response
-    } catch (err) {
-      setError(err.message || 'Failed to summarize text.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleSave = () => {
-    if (!summary) return;
-    setSavedSummaries((prev) => [...prev, summary]);
-    setSummary(""); // Clear the summary field after saving
-    setInputText(""); // Optionally clear input text
-  };
-
+const SummaryPage = () => {
+  // Get the summary data passed through the Link or React Router state
+  const location = useLocation();
+  const { title, time, image } = location.state || {}; // Default to an empty object if no state is passed
+  
   return (
-    <div className="relative flex size-full min-h-screen flex-col bg-slate-50 group/design-root overflow-x-hidden">
-      <Header />
-      <div className="flex flex-col items-center justify-center py-16">
-        <div className="text-center">
-          <h1 className="text-white text-4xl font-black leading-tight tracking-[-0.033em]">
-            Summarize your text
-          </h1>
-          <h2 className="text-white text-sm font-normal leading-normal">
-            Input your text below and we'll generate a summary for you. You can also upload a document or PDF file.
-          </h2>
-        </div>
-
-        <label className="flex flex-col min-w-40 h-14 w-full max-w-[480px]">
-          <div className="flex w-full flex-1 items-stretch rounded-xl h-full">
-            <div className="text-[#49779c] flex border border-[#cedde8] bg-slate-50 items-center justify-center pl-[15px] rounded-l-xl border-r-0">
-              <img src={background} alt="background" />
-            </div>
-            <input
-              type="text"
-              value={inputText}
-              onChange={(e) => setInputText(e.target.value)}
-              placeholder="Enter your text here"
-              className="p-2 border-l border-[#cedde8] rounded-r-xl w-full"
-            />
+    <div className="relative flex flex-col bg-slate-50 min-h-screen">
+      <header className="flex items-center justify-between border-b border-solid border-b-[#e7eef4] px-10 py-3">
+        <div className="flex items-center gap-4 text-[#0d151c]">
+          <div className="w-10 h-10">
+            <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 6H42L36 24L42 42H6L12 24L6 6Z" fill="currentColor"></path>
+            </svg>
           </div>
-        </label>
-
-        <button
-          className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg"
-          onClick={handleSummarize}
-          disabled={loading}
-        >
-          {loading ? 'Loading...' : 'Summarize'}
-        </button>
-
-        {error && (
-          <div className="mt-4 text-red-500">{error}</div>
-        )}
-
-        <div className="p-4 text-center bg-slate-200 rounded-xl mt-8">
-          <h3 className="text-lg font-bold">Summary:</h3>
-          <p>{summary}</p>
-          <button
-            className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg"
-            onClick={handleSave}
-          >
-            Save Summary
-          </button>
+          <h2 className="text-[#0d151c] text-lg font-bold leading-tight tracking-[-0.015em]">Summarize</h2>
         </div>
-
-        <div className="mt-8">
-          {savedSummaries.length > 0 && (
-            <div>
-              <h3 className="text-lg font-bold">Saved Summaries:</h3>
-              <ul className="list-disc ml-5">
-                {savedSummaries.map((saved, index) => (
-                  <li key={index} className="mt-1 text-sm">
-                    {saved}
-                  </li>
-                ))}
-              </ul>
+      </header>
+      <main className="px-40 py-5 flex justify-center">
+        <div className="flex flex-col max-w-[960px] flex-1">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <h1 className="text-[#0e141b] text-3xl font-semibold">{title}</h1>
+            <p className="text-[#4e7397] text-sm">{time} read</p>
+            {/* Adjust image size by specifying width and height */}
+            <div
+              className="bg-center bg-no-repeat bg-cover rounded-lg my-4"
+              style={{ 
+                backgroundImage: `url(${image})`, 
+                width: '200px',  // Set custom width for the image
+                height: '200px', // Set custom height for the image
+                backgroundSize: 'cover', // Ensure the image covers the area
+                backgroundPosition: 'center' // Center the image inside the container
+              }}
+            ></div>
+            <div className="text-[#0e141b] text-base leading-relaxed">
+              <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed auctor orci vitae nulla bibendum, 
+                nec consectetur lorem aliquam. Nulla euismod velit vitae nisi luctus, ac malesuada lorem auctor. 
+                Sed pretium hendrerit risus, vel iaculis enim mollis id. Donec congue velit justo, at suscipit tortor 
+                scelerisque at. Nulla ac libero at leo tincidunt consectetur. Donec iaculis sapien eu purus viverra, 
+                sed varius magna posuere.
+              </p>
+              <p>
+                Morbi a ante metus. Nulla facilisi. Curabitur sed nulla est. Integer in ultricies elit. Duis id nulla 
+                vitae lorem sollicitudin posuere. Aliquam erat volutpat. Phasellus auctor, eros eu pellentesque tincidunt, 
+                quam orci venenatis sapien, sit amet luctus metus ipsum in nulla. Suspendisse ac urna risus.
+              </p>
+              <p>
+                Integer tristique, sapien non auctor aliquet, nisl nulla ullamcorper risus, nec feugiat elit leo ac lorem. 
+                Vivamus placerat dui eget libero scelerisque feugiat. Fusce hendrerit condimentum mi a varius. Integer nec 
+                risus ligula. Sed auctor, eros et iaculis ullamcorper, lorem metus cursus lorem, eget rutrum purus lectus et 
+                felis. Donec faucibus volutpat felis, sit amet pharetra libero sollicitudin ac. Sed sit amet nunc nisl.
+              </p>
             </div>
-          )}
+          </div>
         </div>
-      </div>
-      <Footer />
+      </main>
     </div>
   );
 };
 
-export default SummarizeApp;
+export default SummaryPage;

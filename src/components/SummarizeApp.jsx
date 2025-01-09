@@ -1,16 +1,17 @@
 import React, { useState } from "react";
 import Footer from "./Footer";
 import Header from "./Header";
+import { summarizeText } from "../services/summarizeService"; 
+import { saveSummary } from "../services/summarizeService"; 
 import background from "../assets/background.svg";
-import { summarizeText } from "../services/summarizeService"; // Adjust path if needed
 
 const SummarizeApp = () => {
-  // State to hold input text, summary, saved summaries, and error/loading states
   const [inputText, setInputText] = useState("");
   const [summary, setSummary] = useState("");
   const [savedSummaries, setSavedSummaries] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleSummarize = async () => {
     if (!inputText) {
@@ -19,29 +20,33 @@ const SummarizeApp = () => {
     }
 
     setLoading(true);
-    setError("");
+    setError(""); 
     try {
-      const summarizedText = await summarizeText(inputText);
-      setSummary(summarizedText); // Set the summary state with the response
+      const summarizedText = await summarizeText(inputText); // Call summarizeText API
+      setSummary(summarizedText); // Set the summary in the state
     } catch (err) {
-      setError(err.message || "Failed to summarize text.");
+      setError(err.message || "Failed to summarize text."); // Set error message if the API call fails
     } finally {
-      setLoading(false);
+      setLoading(false); // Reset loading state
     }
   };
 
-  const handleSave = () => {
-    if (!summary) return;
-    setSavedSummaries((prev) => [...prev, summary]);
-    setSummary(""); // Clear the summary field after saving
-    setInputText(""); // Optionally clear input text
+  const handleSaveSummary = async () => {
+    if (!summary) return; // Don't save if no summary exists
+    try {
+      const response = await saveSummary(summary); // Call saveSummary API to save the summary
+      setSavedSummaries((prev) => [...prev, response.savedSummary]); // Assuming the backend sends the saved summary back
+      setSuccessMessage("Summary saved successfully!"); // Set success message
+      setTimeout(() => setSuccessMessage(""), 3000); // Clear message after 3 seconds
+      setSummary(""); // Clear the summary after saving
+      setInputText(""); // Optionally clear the input text
+    } catch (err) {
+      setError(err.message || "Failed to save summary.");
+    }
   };
 
   return (
-    <div
-      className="relative flex size-full min-h-screen flex-col bg-slate-50 group/design-root overflow-x-hidden"
-      style={{ fontFamily: 'Inter, "Noto Sans", sans-serif' }}
-    >
+    <div className="relative flex size-full min-h-screen flex-col bg-slate-50 group/design-root overflow-x-hidden">
       <div className="layout-container flex h-full grow flex-col">
         <Header />
         <div className="px-40 flex flex-1 justify-center py-5">
@@ -60,8 +65,7 @@ const SummarizeApp = () => {
                       Summarize your text
                     </h1>
                     <h2 className="text-white text-sm font-normal leading-normal @[480px]:text-base @[480px]:font-normal @[480px]:leading-normal">
-                      Input your text below and we'll generate a summary for
-                      you. You can also upload a document or PDF file.
+                      Input your text below and we'll generate a summary for you. You can also upload a document or PDF file.
                     </h2>
                   </div>
 
@@ -79,7 +83,7 @@ const SummarizeApp = () => {
                       <div className="flex items-center justify-center rounded-r-xl border-l-0 border border-[#cedde8] bg-slate-50 pr-[7px]">
                         <button
                           className="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 px-4 @[480px]:h-12 @[480px]:px-5 bg-[#2094f3] text-slate-50 text-sm font-bold leading-normal tracking-[0.015em] @[480px]:text-base @[480px]:font-bold @[480px]:leading-normal @[480px]:tracking-[0.015em]"
-                          onClick={handleSummarize}
+                          onClick={handleSummarize} // Trigger summarize action
                           disabled={loading}
                         >
                           {loading ? "Loading..." : "Summarize"}
@@ -97,13 +101,19 @@ const SummarizeApp = () => {
                     <p>{error}</p>
                   </div>
                 )}
-                {summary && !error && (
+                {successMessage && (
+                  <div className="p-4 text-center bg-green-200 rounded-xl">
+                    <h3 className="text-lg font-bold text-green-700">Success:</h3>
+                    <p>{successMessage}</p>
+                  </div>
+                )}
+                {summary && !error && !successMessage && (
                   <div className="p-4 text-center bg-slate-200 rounded-xl">
                     <h3 className="text-lg font-bold">Summary:</h3>
                     <p>{summary}</p>
                     <button
                       className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg"
-                      onClick={handleSave}
+                      onClick={handleSaveSummary} // Save the summary
                     >
                       Save Summary
                     </button>
@@ -111,20 +121,7 @@ const SummarizeApp = () => {
                 )}
               </div>
 
-              <div className="mt-8">
-                {savedSummaries.length > 0 && (
-                  <div>
-                    <h3 className="text-lg font-bold">Saved Summaries:</h3>
-                    <ul className="list-disc ml-5">
-                      {savedSummaries.map((saved, index) => (
-                        <li key={index} className="mt-1 text-sm">
-                          {saved}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
-              </div>
+             
             </div>
             <Footer />
           </div>

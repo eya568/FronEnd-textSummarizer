@@ -12,6 +12,7 @@ export const login = async (email, password) => {
 };
 export const register = async (username, email, password) => {
   try {
+    console.log(username, email, password);
     const response = await axios.post(`${API_BASE_URL}/register`, { username, email, password });
     return response.data; // Assuming the response contains status and user_id
   } catch (error) {
