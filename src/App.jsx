@@ -7,6 +7,7 @@ import HomePage from './pages/HomePage';
 import SavedSummaries from './components/savedSummaries'
 import SummaryPage from './components/SummaryPage';
 import PrivateRoute from './components/PrivateRoute';
+import ProfilePage from './pages/ProfilePage'; // Added import statement for ProfilePage
 
 function App() {
   // Check if token exists
@@ -48,6 +49,7 @@ function App() {
             <Route path="/homepage" element={<HomePage />} />
             <Route path="/Saved" element={<SavedSummaries />} />
             <Route path="/summary" element={<SummaryPage />} />
+            <Route path="/profile" element={<ProfilePage />} /> // Added route for ProfilePage
           </Route>
         </Routes>
       </AuthProvider>

@@ -48,3 +48,12 @@ export const confirmPasswordReset = async (token, newPassword) => {
     throw new Error(error.response?.data?.detail || 'Password reset failed. Please try again.');
   }
 };
+
+export const deleteAccount = async (userId) => {
+  try {
+    const response = await axios.delete(`${API_BASE_URL}/delete_account/${userId}`);
+    return response.data;
+  } catch (error) {
+    throw new Error(error.response?.data?.detail || 'Account deletion failed. Please try again.');
+  }
+};
