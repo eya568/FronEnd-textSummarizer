@@ -1,20 +1,49 @@
 import { useState } from 'react';
 import { AuthProvider, useAuth } from '../context/AuthContext.jsx';
 import { useNavigate } from 'react-router-dom';  // Import useNavigate
+import { requestPasswordReset } from '../services/authService';  // Import the new function
 
 const LoginPage = () => {
   const { handleLogin, error, isLoading } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [resetError, setResetError] = useState('');
+  const [resetSuccess, setResetSuccess] = useState('');
+  const [isResettingPassword, setIsResettingPassword] = useState(false);
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     await handleLogin(email, password);
   };
-  const navigate = useNavigate();
+
+  const handleForgotPassword = async () => {
+    // Reset previous messages
+    setResetError('');
+    setResetSuccess('');
+    setIsResettingPassword(true);
+
+    // Validate email before sending reset request
+    if (!email) {
+      setResetError('Please enter your email address first');
+      setIsResettingPassword(false);
+      return;
+    }
+
+    try {
+      const response = await requestPasswordReset(email);
+      setResetSuccess('Password reset link sent to your email');
+    } catch (err) {
+      setResetError(err.message);
+    } finally {
+      setIsResettingPassword(false);
+    }
+  };
 
   const handleSignUpRedirect = () => {
     navigate('/register'); // Redirect to register page when the sign-up button is clicked
   };
+
   return (
     <AuthProvider>
       <div 
@@ -57,7 +86,15 @@ const LoginPage = () => {
                   <label htmlFor="password" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
                     Password
                   </label>
-                  <button type="button" className="text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400">
+                  <button 
+                    type="button" 
+                    onClick={handleForgotPassword}
+                    disabled={isResettingPassword}
+                    className="text-sm text-blue-600 hover:text-blue-500 dark:text-blue-400 flex items-center gap-1 disabled:opacity-50"
+                  >
+                    {isResettingPassword && (
+                      <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                    )}
                     Forgot password?
                   </button>
                 </div>
@@ -71,6 +108,15 @@ const LoginPage = () => {
                 />
               </div>
 
+              {/* Password Reset Success/Error Messages */}
+              {resetError && (
+                <p className="text-sm text-red-600 dark:text-red-400">{resetError}</p>
+              )}
+              {resetSuccess && (
+                <p className="text-sm text-green-600 dark:text-green-400">{resetSuccess}</p>
+              )}
+
+              {/* Existing login error */}
               {error && (
                 <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
               )}

@@ -28,18 +28,27 @@ export function AuthProvider({ children }) {
     }
   };
 
-
   const handleRegister = async (username, email, password) => {
     setIsLoading(true);
     setError(null);
+
     try {
       const response = await registerService(username, email, password);
-      console.log(response.status);
-      // On success, navigate to the login page
-      navigate('/login');
+      
+      // Success handling based on server response
+      if (response.message === "User registered successfully") {
+        // Optional: You can use response.user_id if needed
+        navigate('/login');
+      } else {
+        // Fallback error handling
+        setError('Registration failed. Please try again.');
+      }
     } catch (err) {
+      // Specific error handling for different scenarios
       if (err.message.includes('Email already exists')) {
         setError('This email is already in use. Please try another one.');
+      } else if (err.message.includes('Username already taken')) {
+        setError('This username is already taken. Please choose another.');
       } else {
         setError('Failed to create account. Please try again.');
       }
@@ -49,7 +58,12 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ handleLogin, handleRegister, error, isLoading }}>
+    <AuthContext.Provider value={{ 
+      handleLogin, 
+      handleRegister, 
+      error, 
+      isLoading 
+    }}>
       {children}
     </AuthContext.Provider>
   );
