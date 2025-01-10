@@ -2,12 +2,10 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import { AuthProvider } from './context/AuthContext';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
-import ResetPasswordPage from './pages/ResetPasswordPage';
 import HomePage from './pages/HomePage';
 import SavedSummaries from './components/savedSummaries'
 import SummaryPage from './components/SummaryPage';
 import PrivateRoute from './components/PrivateRoute';
-import ProfilePage from './pages/ProfilePage'; // Added import statement for ProfilePage
 
 function App() {
   // Check if token exists
@@ -29,10 +27,6 @@ function App() {
             path="/register" 
             element={isAuthenticated() ? <Navigate to="/homepage" replace /> : <RegisterPage />} 
           />
-          <Route 
-            path="/reset-password" 
-            element={isAuthenticated() ? <Navigate to="/homepage" replace /> : <ResetPasswordPage />} 
-          />
           
           {/* Default route */}
           <Route 
@@ -49,7 +43,6 @@ function App() {
             <Route path="/homepage" element={<HomePage />} />
             <Route path="/Saved" element={<SavedSummaries />} />
             <Route path="/summary" element={<SummaryPage />} />
-            <Route path="/profile" element={<ProfilePage />} /> // Added route for ProfilePage
           </Route>
         </Routes>
       </AuthProvider>

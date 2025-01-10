@@ -1,12 +1,11 @@
 // Header.js
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+//import { useAuth } from '../hooks/useAuth';
 
 const Header = () => {
-  const { logout } = useAuth();
-  const navigate = useNavigate();
+ // const { logout } = useAuth();
+ //const navigate = useNavigate();
 
  const handleLogout = () => {
    // Remove the access token from localStorage
@@ -28,7 +27,7 @@ const Header = () => {
       <div className="flex flex-1 justify-end gap-8">
         <div className="flex items-center gap-9">
         <Link to="/Saved" className="text-[#0d151c] text-sm font-medium leading-normal">Saved</Link>          <a className="text-[#0d151c] text-sm font-medium leading-normal" href="#">Explore</a>
-          <Link to="/profile" className="text-[#0d151c] text-sm font-medium leading-normal">Profile</Link>
+          <a className="text-[#0d151c] text-sm font-medium leading-normal" href="#">Profile</a>
           <button 
             onClick={handleLogout} 
             className="text-[#0d151c] text-sm font-medium leading-normal hover:text-red-600"
